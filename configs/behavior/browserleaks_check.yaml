@@ -1,0 +1,14 @@
+name: browserleaks_check
+steps:
+  - type: navigate
+    url: https://browserleaks.com
+  - type: wait
+    selector: body
+    timeout_ms: 20000
+  - type: screenshot
+    name: browserleaks_landing
+  - type: wait
+    selector: canvas, #canvas-fingerprint, .card
+    timeout_ms: 15000
+  - type: screenshot
+    name: browserleaks_canvas

@@ -1,0 +1,308 @@
+# ==========================================================================
+# Local settings
+# ==========================================================================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+.env
+
+output/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+.DS_Store
+.env
+cookies/
+TODO.md
+
+# ==========================================================================
+# Basic Git settings
+# ==========================================================================
+*.orig
+*.rej
+*~
+
+# ==========================================================================
+# System files
+# ==========================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+Desktop.ini
+$RECYCLE.BIN/
+ehthumbs.db
+Thumbs.db
+
+# Linux
+.directory
+*~
+
+# ==========================================================================
+# Development environment and IDE
+# ==========================================================================
+# JetBrains IDEs
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/extensionRecommendations
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# NetBeans
+nbproject/
+build/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*.swp
+*.swo
+*.un~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Other
+.qoder
+
+# ==========================================================================
+# Programming languages and frameworks
+# ==========================================================================
+
+# JavaScript/TypeScript and Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# TypeScript
+*.tsbuildinfo
+dist/
+build/
+out-tsc/
+
+# Angular
+.angular/
+dist/
+aot/
+
+# React/Next.js
+.next/
+out/
+.nextflow/
+
+# Vue/Nuxt
+.nuxt/
+dist/
+.nuxt-production
+
+# Svelte/SvelteKit
+.svelte-kit/
+build/
+
+# SolidJS
+dist/
+.solid/
+
+# Qwik
+dist/
+.server/
+.qwik/
+
+# Bun
+.oven/
+
+# ==========================================================================
+# Build and artifacts
+# ==========================================================================
+tmp/
+temp/
+*.tmp
+*.temp
+*.tgz
+*.tar.gz
+*.zip
+
+# Build systems
+bazel-out/
+bazel-bin/
+bazel-testlogs/
+cmake-build-*/
+build/
+out/
+# Rust, Java, Tauri
+target/
+
+# ==========================================================================
+# Testing
+# ==========================================================================
+coverage/
+.nyc_output/
+.parcel-cache/
+.jest/
+vitest.config.*.timestamp-*
+*.lcov
+*.coverage
+# *.html
+
+# ==========================================================================
+# Documentation
+# ==========================================================================
+storybook-static/
+docs/dist/
+docs/build/
+site/
+
+# ==========================================================================
+# Package Manager specific files
+# ==========================================================================
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+bun.lock
+shrinkwrap.yaml
+
+# ==========================================================================
+# Environment and configuration files
+# ==========================================================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Configuration files (optional - can be commented out if needed)
+# *.config.js
+# *.config.ts
+# vite.config.*.ts
+
+# ==========================================================================
+# Logs
+# ==========================================================================
+logs/
+*.log
+yarn-*.log
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# ==========================================================================
+# Caches
+# ==========================================================================
+.cache/
+.parcel-cache/
+.nx/cache
+.nx/workspace-data
+.sass-cache
+.eslintcache
+.webpack/
+
+# ==========================================================================
+# Platforms and hosting
+# ==========================================================================
+# Vercel
+.vercel/
+.nextflow/
+
+# Netlify
+.netlify/
+dist/
+
+# Firebase
+.firebase/
+*.firebaserc
+
+# AWS
+.aws-sam/
+.sam-build/
+
+# Docker
+.docker/
+
+# ==========================================================================
+# Databases and storage
+# ==========================================================================
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.sqbpro
+
+# ==========================================================================
+# Security and keys
+# ==========================================================================
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+*.keystore
+*.jks
+
+# ==========================================================================
+# Editor temporary files
+# ==========================================================================
+.history/
+*.sublime-*
+*.komodoproject
+*.kdev4
+.fleet/
+.zed/
+
+# ==========================================================================
+# Miscellaneous
+# ==========================================================================
+*.local
+libpeerconnection.log
+testem.log
+/typings
+/connect.lock

@@ -1,0 +1,44 @@
+name: wildberries
+steps:
+  - type: navigate
+    url: https://seller-auth.wildberries.ru
+  - type: wait
+    selector: body
+    timeout_ms: 15000
+  - type: screenshot
+    name: landing
+  - type: wait
+    selector: input[data-testid='phone-input']
+  - type: fill
+    selector: input[data-testid='phone-input']
+    value: $ACTOR_PHONE_LOCAL
+  - type: click
+    selector: button[data-testid='submit-phone-button']
+    name: request-code
+  - type: wait_input
+    prompt: Enter SMS code sent to $ACTOR_PHONE
+    name: sms-code
+  - type: wait
+    selector: input[data-testid='sms-code-input']
+    timeout_ms: 15000
+  - type: fill
+    selector: input[data-testid='sms-code-input']
+    value: $ACTOR_CODE
+  - type: wait
+    selector: body
+    timeout_ms: 30000
+  - type: screenshot
+    name: post-login
+  - type: navigate
+    url: https://seller.wildberries.ru/search-analytics/popular-search-queries
+  - type: wait
+    selector: body
+    timeout_ms: 15000
+  - type: extract_table
+    name: popular-search-queries
+  - type: click
+    selector: button:has-text('Закрыть'), button:has-text('Понятно')
+    name: dismiss-popup
+    timeout_ms: 3000
+  - type: screenshot
+    name: popular-search-queries

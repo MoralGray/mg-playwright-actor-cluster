@@ -1,0 +1,15 @@
+name: wildberries_loggedin
+steps:
+  - type: navigate
+    url: https://seller.wildberries.ru/search-analytics/popular-search-queries
+  - type: wait
+    selector: body
+    timeout_ms: 15000
+  - type: extract_table
+    name: popular-search-queries
+  - type: click
+    selector: button:has-text('Закрыть'), button:has-text('Понятно')
+    name: dismiss-popup
+    timeout_ms: 3000
+  - type: screenshot
+    name: popular-search-queries

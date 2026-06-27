@@ -1,0 +1,14 @@
+name: fingerprintjs_check
+steps:
+  - type: navigate
+    url: https://fingerprintjs.github.io/fingerprintjs/
+  - type: wait
+    selector: body
+    timeout_ms: 20000
+  - type: screenshot
+    name: fingerprintjs_landing
+  - type: wait
+    selector: '#visitorId, .visitor-id, [data-testid="visitorId"], .container'
+    timeout_ms: 15000
+  - type: screenshot
+    name: fingerprintjs_result

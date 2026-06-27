@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Service</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
+  .app { display: flex; min-height: 100vh; }
+  .sidebar { width: 240px; background: #1a1a2e; color: #fff; padding: 24px 0; flex-shrink: 0; }
+  .sidebar h2 { padding: 0 20px 20px; font-size: 18px; border-bottom: 1px solid #2d2d4e; }
+  .sidebar nav { margin-top: 16px; }
+  .sidebar a { display: block; padding: 12px 20px; color: #a0a0c0; text-decoration: none; font-size: 14px; cursor: pointer; }
+  .sidebar a:hover, .sidebar a.active { color: #fff; background: #2d2d4e; border-left: 3px solid #6c63ff; }
+  .main { flex: 1; padding: 32px; max-width: 960px; }
+  .main h1 { font-size: 24px; margin-bottom: 8px; }
+  .subtitle { color: #666; font-size: 14px; margin-bottom: 24px; }
+  .hidden { display: none !important; }
+
+  /* LOGIN */
+  .login-card { background: #fff; border-radius: 12px; padding: 32px; max-width: 440px; margin: 40px auto; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .login-card h1 { text-align: center; }
+  .login-card p { text-align: center; color: #666; font-size: 14px; margin: 8px 0 20px; }
+  .login-card label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .login-card input { width: 100%; padding: 10px 14px; border: 1px solid #d0d5dd; border-radius: 8px; font-size: 14px; margin-bottom: 14px; outline: none; }
+  .login-card input:focus { border-color: #6c63ff; box-shadow: 0 0 0 3px rgba(108,99,255,0.15); }
+  .login-card button { width: 100%; padding: 12px; background: #6c63ff; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .login-card button:hover { background: #5a52e0; }
+  .login-card .error { color: #e53e3e; font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+
+  /* FINGERPRINT INFO */
+  .bp-section { margin-top: 24px; border-top: 1px solid #e0e0e0; padding-top: 16px; max-height: 320px; overflow-y: auto; }
+  .bp-section h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-bottom: 8px; position: sticky; top: 0; background: #fff; padding-bottom: 4px; }
+  .bp-grid { display: grid; grid-template-columns: 140px 1fr; gap: 3px 12px; font-size: 11px; }
+  .bp-grid .key { color: #888; white-space: nowrap; }
+  .bp-grid .val { color: #333; word-break: break-all; overflow: hidden; }
+
+  /* DASHBOARD */
+  .stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+  .stat { flex: 1; min-width: 140px; background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); text-align: center; }
+  .stat .val { font-size: 26px; font-weight: 700; color: #1a1a2e; }
+  .stat .lbl { font-size: 12px; color: #888; margin-top: 4px; }
+  .card { background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .card h3 { font-size: 15px; margin-bottom: 12px; color: #333; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; padding: 10px 12px; background: #f8f9fc; color: #555; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 10px 12px; border-top: 1px solid #eee; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .badge.ok { background: #d4edda; color: #155724; }
+  .badge.warn { background: #fff3cd; color: #856404; }
+  .badge.fail { background: #f8d7da; color: #721c24; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="sidebar hidden" id="sidebar">
+    <h2>Test Service</h2>
+    <nav>
+      <a class="active" onclick="navigate('dashboard')">📊 Dashboard</a>
+      <a onclick="navigate('orders')">📦 Orders</a>
+      <a onclick="navigate('products')">🏷️ Products</a>
+      <a onclick="navigate('analytics')">📈 Analytics</a>
+      <a onclick="logout()" style="margin-top:32px;color:#f85149;">🚪 Logout</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+
+    <div id="loginView">
+      <div class="login-card">
+        <h1>Welcome Back</h1>
+        <p>Sign in to your seller account</p>
+        <form id="loginForm" onsubmit="return doLogin(event)">
+          <label for="loginEmail">Email or phone</label>
+          <input id="loginEmail" type="text" placeholder="email@example.com" autocomplete="email">
+          <label for="loginPass">Password</label>
+          <input id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password">
+          <button type="submit">Sign In</button>
+          <div class="error" id="loginError">Invalid credentials</div>
+        </form>
+        <div class="bp-section" id="bpSection">
+          <h3>Browser Profile</h3>
+          <div class="bp-grid" id="bpGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="appView" class="hidden">
+      <h1 id="pageTitle">Dashboard</h1>
+      <p class="subtitle" id="pageSubtitle">Welcome back! Here's your sales overview.</p>
+      <div id="pageContent"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const state = { loggedIn: false, currentPage: 'dashboard' };
+
+const pages = {
+  dashboard: {
+    title: 'Dashboard',
+    subtitle: 'Welcome back! Here\'s your sales overview.',
+    render: () => `
+      <div class="stat-row">
+        <div class="stat"><div class="val">$128,450</div><div class="lbl">Total Sales</div></div>
+        <div class="stat"><div class="val">347</div><div class="lbl">Orders</div></div>
+        <div class="stat"><div class="val">14,892</div><div class="lbl">Page Views</div></div>
+        <div class="stat"><div class="val">4.7★</div><div class="lbl">Rating</div></div>
+      </div>
+      <div class="card">
+        <h3>Recent Orders</h3>
+        <table>
+          <tr><th>Order</th><th>Product</th><th>Amount</th><th>Status</th></tr>
+          <tr><td>#28491</td><td>Wireless Headphones</td><td>$89.99</td><td><span class="badge ok">Shipped</span></td></tr>
+          <tr><td>#28490</td><td>USB-C Hub</td><td>$34.50</td><td><span class="badge ok">Delivered</span></td></tr>
+          <tr><td>#28489</td><td>Mechanical Keyboard</td><td>$129.00</td><td><span class="badge warn">Processing</span></td></tr>
+          <tr><td>#28488</td><td>Desk Lamp</td><td>$45.00</td><td><span class="badge fail">Cancelled</span></td></tr>
+        </table>
+      </div>
+    `
+  },
+  orders: {
+    title: 'Orders',
+    subtitle: 'Manage your incoming orders.',
+    render: () => `
+      <div class="card">
+        <table>
+          <tr><th>Order</th><th>Date</th><th>Customer</th><th>Total</th><th>Status</th></tr>
+          <tr><td>#28491</td><td>2026-06-24</td><td>alex@mail.com</td><td>$89.99</td><td><span class="badge ok">Shipped</span></td></tr>
+          <tr><td>#28490</td><td>2026-06-23</td><td>maria@mail.com</td><td>$34.50</td><td><span class="badge ok">Delivered</span></td></tr>
+          <tr><td>#28489</td><td>2026-06-22</td><td>ivan@mail.com</td><td>$129.00</td><td><span class="badge warn">Processing</span></td></tr>
+          <tr><td>#28488</td><td>2026-06-21</td><td>olga@mail.com</td><td>$45.00</td><td><span class="badge fail">Cancelled</span></td></tr>
+        </table>
+      </div>
+    `
+  },
+  products: {
+    title: 'Products',
+    subtitle: 'Your product catalog.',
+    render: () => `
+      <div class="card">
+        <table>
+          <tr><th>SKU</th><th>Name</th><th>Price</th><th>Stock</th><th>Status</th></tr>
+          <tr><td>WH-1000</td><td>Wireless Headphones</td><td>$89.99</td><td>143</td><td><span class="badge ok">Active</span></td></tr>
+          <tr><td>USB-C-H1</td><td>USB-C Hub 7-in-1</td><td>$34.50</td><td>87</td><td><span class="badge ok">Active</span></td></tr>
+          <tr><td>KB-MECH</td><td>Mechanical Keyboard RGB</td><td>$129.00</td><td>22</td><td><span class="badge warn">Low Stock</span></td></tr>
+          <tr><td>DL-200</td><td>Desk Lamp LED</td><td>$45.00</td><td>0</td><td><span class="badge fail">Out of Stock</span></td></tr>
+        </table>
+      </div>
+    `
+  },
+  analytics: {
+    title: 'Analytics',
+    subtitle: 'Traffic and conversion data.',
+    render: () => `
+      <div class="stat-row">
+        <div class="stat"><div class="val">14.8k</div><div class="lbl">Views</div></div>
+        <div class="stat"><div class="val">3.2k</div><div class="lbl">Visitors</div></div>
+        <div class="stat"><div class="val">2.34%</div><div class="lbl">Conversion</div></div>
+        <div class="stat"><div class="val">$128.4k</div><div class="lbl">Revenue</div></div>
+      </div>
+      <div class="card">
+        <h3>Traffic Sources</h3>
+        <table>
+          <tr><th>Source</th><th>Visitors</th><th>Share</th></tr>
+          <tr><td>Organic Search</td><td>1,456</td><td>45%</td></tr>
+          <tr><td>Direct</td><td>872</td><td>27%</td></tr>
+          <tr><td>Social Media</td><td>521</td><td>16%</td></tr>
+          <tr><td>Referral</td><td>384</td><td>12%</td></tr>
+        </table>
+      </div>
+    `
+  }
+};
+
+function navigate(page) {
+  if (!state.loggedIn) return;
+  state.currentPage = page;
+  const p = pages[page];
+  document.getElementById('pageTitle').textContent = p.title;
+  document.getElementById('pageSubtitle').textContent = p.subtitle;
+  document.getElementById('pageContent').innerHTML = p.render();
+  document.querySelectorAll('.sidebar a').forEach(el => el.classList.remove('active'));
+  const idx = ['dashboard','orders','products','analytics'].indexOf(page);
+  if (idx >= 0) document.querySelectorAll('.sidebar a')[idx].classList.add('active');
+}
+
+function doLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  if (!email || !pass) { document.getElementById('loginError').style.display = 'block'; return false; }
+  state.loggedIn = true;
+  document.getElementById('loginView').classList.add('hidden');
+  document.getElementById('sidebar').classList.remove('hidden');
+  document.getElementById('appView').classList.remove('hidden');
+  navigate('dashboard');
+  return false;
+}
+
+function logout() {
+  state.loggedIn = false;
+  document.getElementById('loginView').classList.remove('hidden');
+  document.getElementById('sidebar').classList.add('hidden');
+  document.getElementById('appView').classList.add('hidden');
+}
+
+function addBP(k, v) {
+  const grid = document.getElementById('bpGrid');
+  const dk = document.createElement('div'); dk.className = 'key'; dk.textContent = k;
+  const dv = document.createElement('div'); dv.className = 'val'; dv.textContent = String(v);
+  grid.appendChild(dk); grid.appendChild(dv);
+}
+
+(async function showBrowserProfile() {
+
+  addBP('User Agent', navigator.userAgent);
+  addBP('Platform', navigator.platform);
+  addBP('Language', navigator.language);
+  addBP('Languages', navigator.languages.join(', '));
+  addBP('Vendor', navigator.vendor);
+  addBP('Vendor Sub', navigator.vendorSub || 'N/A');
+  addBP('Product', navigator.product);
+  addBP('Product Sub', navigator.productSub || 'N/A');
+  addBP('WebDriver', navigator.webdriver);
+  addBP('Brave', typeof navigator.brave !== 'undefined' ? 'present' : 'absent');
+  addBP('Hardware Concurrency', navigator.hardwareConcurrency);
+  addBP('Device Memory', navigator.deviceMemory ?? 'N/A');
+  addBP('Screen', `${screen.width}x${screen.height}`);
+  addBP('Avail Screen', `${screen.availWidth}x${screen.availHeight}`);
+  addBP('Screen Top/Left', `${screen.top},${screen.left}`);
+  addBP('Color Depth', screen.colorDepth + 'bit');
+  addBP('Pixel Ratio', window.devicePixelRatio);
+  addBP('Window', `${window.innerWidth}x${window.innerHeight}`);
+  addBP('Window Outer', `${window.outerWidth}x${window.outerHeight}`);
+  addBP('Screen X/Y', `${window.screenX},${window.screenY}`);
+  addBP('Time Zone', Intl.DateTimeFormat().resolvedOptions().timeZone);
+  addBP('Cookies Enabled', navigator.cookieEnabled);
+  addBP('Do Not Track', navigator.doNotTrack ?? 'unspecified');
+  addBP('PDF Viewer', navigator.pdfViewerEnabled);
+  addBP('Touch Points', navigator.maxTouchPoints);
+  addBP('Touch Event', 'ontouchstart' in window);
+  addBP('Online', navigator.onLine);
+  addBP('Connection', navigator.connection?.effectiveType ?? 'N/A');
+  addBP('Connection Downlink', navigator.connection?.downlink ?? 'N/A');
+  addBP('Connection RTT', navigator.connection?.rtt ?? 'N/A');
+  addBP('Plugins', Array.from(navigator.plugins).map(p => p.name).join(', ') || 'none');
+
+  addBP('CPU Class', navigator.cpuClass ?? 'N/A');
+  addBP('Oscpu', navigator.oscpu ?? 'N/A');
+  addBP('Build ID', navigator.buildID ?? 'N/A');
+
+  // WebGL
+  try {
+    const c = document.createElement('canvas');
+    const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+    if (gl) {
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      addBP('WebGL Vendor', gl.getParameter(ext.UNMASKED_VENDOR_WEBGL));
+      addBP('WebGL Renderer', gl.getParameter(ext.UNMASKED_RENDERER_WEBGL));
+      addBP('WebGL Version', gl.getParameter(gl.VERSION));
+      addBP('GLSL Version', gl.getParameter(gl.SHADING_LANGUAGE_VERSION));
+      addBP('WebGL Max Tex Size', gl.getParameter(gl.MAX_TEXTURE_SIZE));
+      addBP('WebGL Max Viewport', gl.getParameter(gl.MAX_VIEWPORT_DIMS).join('x'));
+      addBP('WebGL Extensions', gl.getSupportedExtensions().join(', '));
+
+      gl.clearColor(0.1, 0.3, 0.6, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      const pixels = new Uint8Array(4);
+      gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+      addBP('WebGL Canvas FP', `rgba(${pixels[0]},${pixels[1]},${pixels[2]},${pixels[3]})`);
+    } else {
+      addBP('WebGL', 'not supported');
+    }
+  } catch (e) { addBP('WebGL', e.message); }
+
+  // Canvas 2D fingerprint
+  try {
+    const c = document.createElement('canvas');
+    c.width = 256; c.height = 60;
+    const ctx = c.getContext('2d');
+    ctx.textBaseline = 'top';
+    ctx.font = '14px Arial';
+    ctx.fillStyle = '#f60';
+    ctx.fillRect(100, 1, 62, 20);
+    ctx.fillStyle = '#069';
+    ctx.fillText('fp-test-🧪🔍', 2, 15);
+    addBP('Canvas 2D Hash', c.toDataURL().substring(0, 120) + '...');
+  } catch (e) { addBP('Canvas 2D Hash', e.message); }
+
+  // Audio
+  try {
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    addBP('Audio Sample Rate', ac.sampleRate);
+    const osc = ac.createOscillator();
+    const analyser = ac.createAnalyser();
+    osc.connect(analyser);
+    addBP('Audio FFT Size', analyser.fftSize);
+    addBP('Audio Max Output', ac.destination.maxChannelCount);
+    ac.close();
+  } catch (e) { addBP('Audio', e.message); }
+
+  // Font detection
+  (function detectFonts() {
+    const baseFonts = ['monospace', 'sans-serif', 'serif'];
+    const testFonts = [
+      'Arial', 'Arial Black', 'Arial Narrow', 'Calibri', 'Cambria',
+      'Cambria Math', 'Candara', 'Comic Sans MS', 'Consolas', 'Constantia',
+      'Corbel', 'Courier New', 'Ebrima', 'Franklin Gothic Medium',
+      'Gabriola', 'Georgia', 'Impact', 'Lucida Console', 'Lucida Sans Unicode',
+      'Microsoft Sans Serif', 'Palatino Linotype', 'Segoe UI', 'Segoe UI Light',
+      'Segoe UI Semibold', 'Segoe UI Symbol', 'Tahoma', 'Times New Roman',
+      'Trebuchet MS', 'Verdana', 'Webdings', 'Wingdings'
+    ];
+    const c = document.createElement('canvas');
+    c.width = 100; c.height = 40;
+    const ctx = c.getContext('2d');
+    const getWidth = (font) => { ctx.font = '16px ' + font; return ctx.measureText('abcdefghijklmnopqrstuvwxyz').width; };
+    const base = {};
+    baseFonts.forEach(f => base[f] = getWidth(f));
+    const detected = testFonts.filter(f => {
+      const w = getWidth(f);
+      return baseFonts.some(bf => Math.abs(w - base[bf]) > 1.5);
+    });
+    addBP('Fonts Installed', detected.join(', ') || 'none detected');
+  })();
+
+})();
+</script>
+</body>
+</html>

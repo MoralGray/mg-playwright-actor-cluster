@@ -1,0 +1,35 @@
+[tools]
+python = '3.12'
+ruff = '0.15.20'
+
+[env]
+_.file = ".env"
+OPENROUTER_MODEL="deepseek/deepseek-v4-flash"
+# Set PLAYWRIGHT_HEADLESS=false to see the browser window for debugging
+PLAYWRIGHT_HEADLESS="true"
+# Set NO_PROXY=true to bypass the configured proxy for local debugging
+NO_PROXY="true"
+
+[tasks.lint]
+description = "Run ruff linter and formatter check"
+run = "ruff check . && ruff format --check ."
+
+[tasks.serve]
+description = "Serve index.test.html for local testing on port 8111"
+run = "python -m http.server 8111"
+
+[tasks.prepare]
+description = "Install Python dependencies and Playwright browsers"
+run = "pip install -r requirements.txt && playwright install chromium"
+
+[tasks.extract]
+description = "Open index.test.html, log in, screenshot, extract tables, run LLM analytics via OpenRouter"
+run = "python scripts/extract_analytics.py"
+
+[tasks.wb-analytics]
+description = "Run both WB actors (det + llm): login via SMS, navigate to popular-search-queries, extract table"
+run = "python scripts/wb-analytics.py"
+
+[tasks.fingerprint-check]
+description = "Visit browserleaks.com and fingerprintjs demo with stealth overrides, dump fingerprint JSON to output/fingerprint-*/"
+run = "python scripts/fingerprint_check.py"

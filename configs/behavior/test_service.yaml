@@ -1,0 +1,29 @@
+name: test_service
+steps:
+  - type: navigate
+    url: http://localhost:8111/index.test.html
+  - type: wait
+    selector: '#loginEmail'
+  - type: screenshot
+    name: landing
+  - type: fill
+    selector: '#loginEmail'
+    value: test@test.com
+  - type: fill
+    selector: '#loginPass'
+    value: password123
+  - type: click
+    selector: '#loginForm button[type="submit"]'
+  - type: wait
+    selector: '#sidebar'
+    timeout_ms: 5000
+  - type: click
+    selector: a[onclick*="orders"]
+  - type: wait
+    selector: '#pageTitle'
+  - type: screenshot
+    name: orders
+  - type: scroll
+    value: '300'
+  - type: screenshot
+    name: scrolled

@@ -1,0 +1,21 @@
+{
+  "name": "test_user_1",
+  "proxy_ref": "",
+  "fingerprint": {
+    "screen": {"width": 1680, "height": 1050, "offset_x": 8, "offset_y": 2},
+    "webgl_vendor": "Google Inc. (Intel)",
+    "webgl_renderer": "ANGLE (Intel, Intel(R) UHD Graphics 630 Direct3D11 vs_5_0 ps_5_0)",
+    "fonts": ["Arial", "Calibri", "Tahoma", "Verdana"],
+    "audio_sample_rate": 48000,
+    "timezone": "Europe/Moscow",
+    "language": "ru-RU",
+    "platform": "Win32",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
+  },
+  "credentials": {
+    "url": "http://localhost:8111",
+    "login": "test@test.com",
+    "password_env": "ACTOR_TEST_PASSWORD"
+  },
+  "behavior": "configs/behavior/test_service.yaml"
+}

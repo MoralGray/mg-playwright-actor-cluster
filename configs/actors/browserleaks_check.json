@@ -1,0 +1,20 @@
+{
+  "name": "browserleaks_check",
+  "fingerprint": {
+    "screen": {"width": 1920, "height": 1080, "offset_x": 0, "offset_y": 0},
+    "webgl_vendor": "Intel Inc.",
+    "webgl_renderer": "Intel Iris OpenGL Engine",
+    "fonts": ["Arial", "Calibri", "Segoe UI", "Times New Roman"],
+    "audio_sample_rate": 44100,
+    "timezone": "Europe/Moscow",
+    "language": "ru-RU",
+    "languages": ["ru-RU", "en-US", "en"],
+    "platform": "Win32",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+  },
+  "credentials": {
+    "url": "https://browserleaks.com"
+  },
+  "resolve_mode": "selector",
+  "behavior": "configs/behavior/browserleaks_check.yaml"
+}
