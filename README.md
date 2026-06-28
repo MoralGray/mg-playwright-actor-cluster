@@ -90,9 +90,6 @@ python scripts/health.py
 ### 5. Local testing (optional)
 
 ```bash
-# In a second terminal, serve the test page
-mise run serve
-
 # Run the extraction demo
 mise run extract
 ```
